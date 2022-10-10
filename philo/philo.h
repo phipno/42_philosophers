@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:42:06 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/10 12:46:56 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/10 17:17:15 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,15 +42,16 @@ typedef struct s_mainS
 	int time_sleep;
 	int	nbr_times_phi_eat;
 	pthread_mutex_t *fork;
-	int start_mili;
-	struct timeval start_time;
-	struct timeval curr_time;
+	struct timeval time;
+	long long start_mili;
 }		t_mainS;
 
 int	ft_atoi(const char *str);
 
 int		init_struct(t_mainS *s, char **argv);
 t_philo	*init_each_philo(t_mainS *s);
+long long transform_milli(t_mainS *s);
+
 
 int start_simulation(t_mainS *s);
 void	*routine(void *arg);

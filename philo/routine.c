@@ -6,14 +6,25 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:33:07 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/10 15:35:28 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/10 17:22:16 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	forks_and_food(t_mainS *s)
+long long current_time(t_mainS *s)
 {
+	struct timeval curr;
+	long long ms;
+	
+	if (gettimeofday(&curr, NULL) != 0)
+		s->error = 102;
+	ms = (curr.tv_sec * 1000) + (curr.tv_usec / 1000);
+	return (ms);
+}
+
+void	forks_and_food(t_mainS *s)
+{	
 	if (s->id % 2 != 0)
 	{
 		pthread_mutex_lock(&s->fork[s->id]);
@@ -21,7 +32,8 @@ void	forks_and_food(t_mainS *s)
 		pthread_mutex_lock(&s->fork[s->id + 1]);
 		printf("p[%d] has taken a fork: %d\n", s->id, s->id + 1);
 		printf("p[%d] is eating\n", s->id);
-		usleep(s->time_eat);
+		s->phi[s->id].count_phi_eat++;
+		while (s->start_mili + s->time_eat > current_time(s))
 		pthread_mutex_unlock(&s->fork[s->id]);
 		pthread_mutex_unlock(&s->fork[s->id + 1]);
 	}

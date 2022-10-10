@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:57:37 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/10 12:55:04 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/10 16:53:45 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ int init_struct(t_mainS *s, char **argv)
 	s->fork = malloc(sizeof(pthread_mutex_t) * s->nbr_fork);
 	if (s->fork == NULL)
 		s->error = 102;
-	if (gettimeofday(&s->start_time, NULL) != 0)
+	if (gettimeofday(&s->time, NULL) != 0)
 		s->error = 102;
+	s->start_mili = (s->time.tv_sec * 1000) + (s->time.tv_usec / 1000);
 	return(s->error);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:40:15 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/05 17:22:37 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/10 16:57:14 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void printS(t_mainS s)
 	printf("time_eat: %d\n", s.time_eat);
 	printf("time_sleep: %d\n", s.time_sleep);
 	printf("nbr_times_phi_eat: %d\n", s.nbr_times_phi_eat);
-	printf("seconds : %ld\nmicro seconds : %d", s.start_time.tv_sec, s.start_time.tv_usec);
+	printf("second: %ld       microseconds: %d\n", s.time.tv_sec, s.time.tv_usec);
+	printf("millisec: %lld\n", s.start_mili);
 }
 
 int main(int argc, char **argv)
