@@ -1,0 +1,9 @@
+{
+	"files.associations": {
+		"__threading_support": "c",
+		"functional": "c",
+		"typeinfo": "c",
+		"vector": "c",
+		"__locale": "c"
+	}
+}
