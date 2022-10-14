@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:57:37 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/10 16:53:45 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/14 16:04:41 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,15 @@ t_philo	*init_each_philo(t_mainS *s)
 	{
 		phi[j].id_phi = j + 1;
 		phi[j].timer_die = s->time_die;
+		phi[j].timer_eat = s->time_eat;
+		phi[j].timer_die = s->time_sleep;
 		if (s->c_argc == 6)
 			phi[j].count_phi_eat = s->nbr_times_phi_eat;
 		else
 			phi[j].count_phi_eat = 0;
 		j++;
+		phi->error = 0;
+		phi->doom = s; 
 	}
 	return(phi);
 }
@@ -53,11 +57,11 @@ int init_struct(t_mainS *s, char **argv)
 	else
 		s->nbr_times_phi_eat = 0;
 	s->nbr_fork = s->nbr_phi;
-	s->phi = init_each_philo(s);
+	s->phi = init_each_philo(&s);
+	if (gettimeofday(&s->time, NULL) != 0)
+		s->error = 102;
 	s->fork = malloc(sizeof(pthread_mutex_t) * s->nbr_fork);
 	if (s->fork == NULL)
-		s->error = 102;
-	if (gettimeofday(&s->time, NULL) != 0)
 		s->error = 102;
 	s->start_mili = (s->time.tv_sec * 1000) + (s->time.tv_usec / 1000);
 	return(s->error);

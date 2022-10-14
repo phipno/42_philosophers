@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:42:06 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/10 17:17:15 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/14 16:04:31 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,14 @@
 
 typedef struct s_philo
 {
+	int error;
 	int id_phi;
 	int timer_die;
 	int timer_eat;
 	int timer_sleep;
 	int count_phi_eat;
+	long long curr_mili;
+	struct s_mainS *doom;
 }		t_philo;
 
 typedef struct s_mainS

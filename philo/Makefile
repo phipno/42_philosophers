@@ -7,10 +7,10 @@ OBJ = $(SRC:.c=.o)
 all: $(NAME)
 
 %.o : %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -fsanitize=address
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+	$(CC) $(OBJ) -o $(NAME) -fsanitize=address
 
 clean:
 	rm -f $(wildcard *.o)
