@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:42:06 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/14 16:04:31 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/17 17:45:12 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ typedef struct s_philo
 	int timer_sleep;
 	int count_phi_eat;
 	long long curr_mili;
-	struct s_mainS *doom;
+	long long start_mili;
+	struct s_mainS *mainstr;
 }		t_philo;
 
 typedef struct s_mainS
@@ -44,7 +45,9 @@ typedef struct s_mainS
 	int	time_eat;
 	int time_sleep;
 	int	nbr_times_phi_eat;
+	bool death;
 	pthread_mutex_t *fork;
+	pthread_mutex_t lock;
 	struct timeval time;
 	long long start_mili;
 }		t_mainS;

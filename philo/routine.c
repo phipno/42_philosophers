@@ -6,45 +6,83 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:33:07 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/14 16:28:06 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/17 17:51:16 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long current_time(t_mainS *s)
+long long current_time(t_philo *phi)
 {
 	struct timeval curr;
 	long long ms;
 	
 	if (gettimeofday(&curr, NULL) != 0)
-		s->error = 102;
-	ms = ((curr.tv_sec * 1000) + (curr.tv_usec / 1000)) - s->start_mili;
+		phi->error = 102;
+	ms = ((curr.tv_sec * 1000) + (curr.tv_usec / 1000)) - phi->start_mili;
 	return (ms);
 }
 
-bool	death_checker(t_mainS *s)
+void	sleepy_philo(t_philo *phi)
 {
-	int i;
-	
-	i  = 0;
-	while (i < s->nbr_phi)
+	phi->curr_mili = current_time(phi);
+	if (phi->timer_die < phi->timer_sleep)
 	{
-		if (s->phi[i].count_phi_eat > s->nbr_times_phi_eat)
-			return(true);
-		i++;
+		while (phi->curr_mili + phi->timer_die > current_time(phi))
+		printf("%lld %d died\n", current_time(phi), phi->id_phi);
+		pthread_mutex_lock(&phi->mainstr->lock);
+		phi->mainstr->death = 1;
+		pthread_mutex_unlock(&phi->mainstr->lock);
 	}
-	return(false);
+	printf("%lld %d is sleeping\n", current_time(phi), phi->id_phi);
+	while(phi->curr_mili + phi->timer_sleep > current_time(phi));
+}
+
+void	forks_and_food(t_philo *phi)
+{
+	phi->curr_mili = current_time(phi);
+	pthread_mutex_lock(&phi->mainstr->fork[phi->id_phi - 1]);
+	printf("%lld %d has taken a fork\n", current_time(phi), phi->id_phi);
+	pthread_mutex_lock(&phi->mainstr->fork[phi->id_phi]);
+	printf("%lld %d has taken a fork\n", current_time(phi), phi->id_phi);
+	if (phi->timer_die < phi->timer_eat)
+		{
+			while (phi->curr_mili + phi->timer_die > current_time(phi))
+			printf("%lld %d died\n", current_time(phi), phi->id_phi);
+			pthread_mutex_lock(&phi->mainstr->lock);
+			phi->mainstr->death = 1;
+			pthread_mutex_unlock(&phi->mainstr->lock);
+		}
+	printf("%lld %d is eating\n", current_time(phi), phi->id_phi);
+	while(phi->curr_mili + phi->timer_eat > current_time(phi))
+	pthread_mutex_unlock(&phi->mainstr->fork[phi->id_phi]);
+	pthread_mutex_unlock(&phi->mainstr->fork[phi->id_phi + 1]);
+	phi->count_phi_eat++;
+}
+
+void	brainpower(t_philo *phi)
+{
+	phi->curr_mili = current_time(phi);
+	printf("%lld %d is thinking\n", current_time(phi), phi->id_phi);
+	while(phi->curr_mili + phi->timer_eat > current_time(phi));
 }
 
 void	*routine(void *arg)
 {
-	t_mainS *s;
+	t_philo *phi;
+	int i = 0;
 	
-	s = (t_mainS*)arg;
-	while ()
+	phi = (t_philo*)arg;
+	while (phi->mainstr->death != 1)
 	{
-	}
+		if (phi->id_phi % 2 != 0)
+		{	
+			forks_and_food(phi);
+			sleepy_philo(phi);
+		}
+		brainpower(phi);
+		i++;
+	}	
 	return (NULL);
 }
 
@@ -55,6 +93,9 @@ int start_simulation(t_mainS *s)
 	
 	i = 0;
 	// printf("NBR_phi %d\n", s->nbr_phi);
+	// pthread_mutex_init(s->fork, NULL);
+	s->death = 0;
+	pthread_mutex_init(&s->lock, NULL);
 	while (i < s->nbr_fork)
 	{
 		pthread_mutex_init(&s->fork[i], NULL);
@@ -63,8 +104,7 @@ int start_simulation(t_mainS *s)
 	i = 0;
 	while (i < s->nbr_phi)
 	{
-		s->id = i + 1;
-		if (pthread_create(&tid[i] , NULL, &routine, &s) != 0)
+		if (pthread_create(&tid[i] , NULL, &routine, &s->phi[i]) != 0)
 			return (102);
 		i++;
 	}
@@ -76,9 +116,10 @@ int start_simulation(t_mainS *s)
 		i++;
 	}
 	i = 0;
+	pthread_mutex_destroy(&s->lock);
 	while (i < s->nbr_fork)
 	{
-		pthread_mutex_destroy(&s->fork[i]);
+		pthread_mutex_destroy(&s->fork[i]);	
 		i++;
 	}	
 	return(0);
