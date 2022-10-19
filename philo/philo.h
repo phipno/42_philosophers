@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:42:06 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/17 17:45:12 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/19 16:32:56 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,16 @@
 typedef struct s_philo
 {
 	int error;
-	int id_phi;
+	int id;
 	int timer_die;
 	int timer_eat;
 	int timer_sleep;
 	int count_phi_eat;
-	long long curr_mili;
-	long long start_mili;
-	struct s_mainS *mainstr;
+	int nbr_phi;
+	int multi;
+	long long currRun_mili;
+	long long startTime_mili;
+	struct s_mainS *slk;
 }		t_philo;
 
 typedef struct s_mainS
@@ -49,10 +51,10 @@ typedef struct s_mainS
 	pthread_mutex_t *fork;
 	pthread_mutex_t lock;
 	struct timeval time;
-	long long start_mili;
+	long long startTime_mili;
 }		t_mainS;
 
-int	ft_atoi(const char *str);
+int	ft_atoi(char *str, t_mainS *s);
 
 int		init_struct(t_mainS *s, char **argv);
 t_philo	*init_each_philo(t_mainS *s);
@@ -61,5 +63,9 @@ long long transform_milli(t_mainS *s);
 
 int start_simulation(t_mainS *s);
 void	*routine(void *arg);
+void	print_manager(char action, t_philo *phi);
+bool	death_manager(int time_left, t_philo *phi);
+void	my_sleep(long long ms, t_philo *phi);
+long long current_time(t_philo *phi);
 
 #endif
