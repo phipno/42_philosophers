@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:40:15 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 17:25:45 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/19 17:57:03 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,33 +28,24 @@ int	ft_error(int error)
 			printf("ERROR! My programm only eats positive numbers\n");
 		else if (error == 403)
 			printf("ERROR! To big number\n");
-	return(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	}
 	else
-		return(EXIT_SUCCESS);
+		return (EXIT_SUCCESS);
 }
 
-void printS(t_mainS s)
+int	start_simulation(t_mainS *s)
 {
-	printf("nbr_phi: %d\n", s.nbr_fork);
-	printf("nbr_fork: %d\n", s.nbr_fork);
-	printf("time_die: %d\n", s.time_die);
-	printf("time_eat: %d\n", s.time_eat);
-	printf("time_sleep: %d\n", s.time_sleep);
-	printf("nbr_times_phi_eat: %d\n", s.nbr_times_phi_eat);
-	printf("second: %ld       microseconds: %d\n", s.time.tv_sec, s.time.tv_usec);
-	printf("millisec: %lld\n", s.startTime_mili);
-}
+	int			i;
+	pthread_t	*tid;
 
-int start_simulation(t_mainS *s)
-{
-	int i;
-	pthread_t tid[s->nbr_phi];
-	
 	i = 0;
+	tid = malloc(sizeof(pthread_t) * s->nbr_phi);
+	if (tid == NULL)
+		return (102);
 	while (i < s->nbr_phi)
 	{
-		if (pthread_create(&tid[i] , NULL, &routine, &s->phi[i]) != 0)
+		if (pthread_create(&tid[i], NULL, &routine, &s->phi[i]) != 0)
 			return (102);
 		i++;
 	}
@@ -65,44 +56,51 @@ int start_simulation(t_mainS *s)
 			return (102);
 		i++;
 	}
-	return(0);
+	free(tid);
+	return (0);
 }
 
-void freeee(t_mainS *s)
+void	freeee(t_mainS *s)
 {
-	int i;
-	
-	i = 0;
-	while (i < s->nbr_phi)
-	{
-		free(s->phi);
-		i++;
-	}
+	int	i;
+	free(s->phi);
 	pthread_mutex_destroy(&s->lock);
 	i = 0;
 	while (i < s->nbr_fork)
 	{
-		pthread_mutex_destroy(&s->fork[i]);	
+		pthread_mutex_destroy(&s->fork[i]);
 		i++;
-	}	
+	}
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_mainS s;
-	
+	t_mainS	s;
+
 	s.error = 0;
 	if (argc < 5)
 		s.error = 100;
 	if (argc > 6)
 		s.error = 101;
 	if (ft_error(s.error) == EXIT_FAILURE)
-		return(EXIT_FAILURE);
+		return (EXIT_FAILURE);
 	s.c_argc = argc;
 	if (init_struct(&s, argv) != 0)
-		return(ft_error(s.error));
-	// printS(s);
+		return (ft_error(s.error));
 	start_simulation(&s);
 	freeee(&s);
-	return(ft_error(s.error));
+	return (ft_error(s.error));
 }
+
+// void printS(t_mainS s)
+// {
+// 	printf("nbr_phi: %d\n", s.nbr_fork);
+// 	printf("nbr_fork: %d\n", s.nbr_fork);
+// 	printf("time_die: %d\n", s.time_die);
+// 	printf("time_eat: %d\n", s.time_eat);
+// 	printf("time_sleep: %d\n", s.time_sleep);
+// 	printf("nbr_times_phi_eat: %d\n", s.nbr_times_phi_eat);
+// 	printf("second: %ld       microseconds: %d\n", 
+// 			s.time.tv_sec, s.time.tv_usec);
+// 	printf("millisec: %lld\n", s.starttime_mili);
+// }

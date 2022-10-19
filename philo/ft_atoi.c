@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:50:13 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 12:49:03 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/19 17:55:31 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ static void	checker_for_atoi(char *str, t_mainS *s)
 	}
 }
 
+static void	norminette(int *index, t_mainS *s)
+{
+	s->error = 401;
+	index++;
+}
+
 int	ft_atoi(char *str, t_mainS *s)
 {
 	long int	res;
@@ -40,16 +46,10 @@ int	ft_atoi(char *str, t_mainS *s)
 	sign = 1;
 	index = 0;
 	checker_for_atoi(str, s);
-	while (str[index] == '\t' || str[index] == '\v' || str[index] == '\f'
-		|| str[index] == '\r' || str[index] == '\n' || str[index] == ' ')
-			index++;
 	if (str[index] == '+')
 		index++;
 	if (str[index] == '-')
-	{
-		s->error = 401;
-		index++;
-	}
+		norminette(&index, s);
 	res = 0;
 	while (str[index] != '\0' && str[index] >= '0' && str[index] <= '9')
 	{

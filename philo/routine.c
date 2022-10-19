@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:33:07 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 16:54:51 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/19 17:52:47 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	sleepy_philo(t_philo *phi)
 {
-	phi->currRun_mili = current_time(phi);
+	phi->curr_run_mili = current_runtime(phi);
 	print_manager('s', phi);
 	if (phi->timer_eat + phi->timer_sleep >= phi->timer_die)
 	{
@@ -27,9 +27,9 @@ static void	sleepy_philo(t_philo *phi)
 		return ;
 	if (phi->timer_eat * 2 >= phi->timer_die)
 	{
-		phi->currRun_mili = current_time(phi);
+		phi->curr_run_mili = current_runtime(phi);
 		print_manager('t', phi);
-		my_sleep(phi->timer_die - phi->currRun_mili, phi);
+		my_sleep(phi->timer_die - phi->curr_run_mili, phi);
 		if (death_manager(phi->timer_die + 1, phi) == true)
 			return ;
 	}
@@ -37,7 +37,7 @@ static void	sleepy_philo(t_philo *phi)
 
 static void	forks_and_food(t_philo *phi)
 {
-	phi->currRun_mili = current_time(phi);
+	phi->curr_run_mili = current_runtime(phi);
 	pthread_mutex_lock(&phi->slk->fork[phi->id - 1]);
 	print_manager('f', phi);
 	if (phi->id == phi->slk->nbr_phi && phi->slk->nbr_fork % 2 != 0)
@@ -45,7 +45,7 @@ static void	forks_and_food(t_philo *phi)
 	else
 		pthread_mutex_lock(&phi->slk->fork[phi->id]);
 	print_manager('f', phi);
-	phi->currRun_mili = current_time(phi);
+	phi->curr_run_mili = current_runtime(phi);
 	print_manager('e', phi);
 	my_sleep(phi->timer_eat, phi);
 	if (death_manager(phi->timer_eat, phi) == true)
@@ -64,7 +64,7 @@ static void	*dinner_for_one(t_philo *phi)
 	print_manager('f', phi);
 	my_sleep(phi->timer_die, phi);
 	printf("%d %d died\n", phi->timer_die, phi->id);
-	return(NULL);
+	return (NULL);
 }
 
 static void	brainpower(t_philo *phi)
@@ -79,10 +79,10 @@ static void	brainpower(t_philo *phi)
 
 void	*routine(void *arg)
 {
-	t_philo *phi;
-	
-	phi = (t_philo*)arg;
-	phi->currRun_mili = current_time(phi);
+	t_philo	*phi;
+
+	phi = (t_philo *)arg;
+	phi->curr_run_mili = current_runtime(phi);
 	if (phi->nbr_phi == 1)
 		return (dinner_for_one(phi));
 	if (phi->id % 2 != 0)
@@ -92,9 +92,10 @@ void	*routine(void *arg)
 	{
 		pthread_mutex_unlock(&phi->slk->lock);
 		forks_and_food(phi);
-		phi->currRun_mili = current_time(phi);
+		phi->curr_run_mili = current_runtime(phi);
 		print_manager('t', phi);
-		if (phi->slk->nbr_times_phi_eat != 0 && phi->count_phi_eat == phi->slk->nbr_times_phi_eat)
+		if (phi->slk->nbr_times_phi_eat != 0
+			&& phi->count_phi_eat == phi->slk->nbr_times_phi_eat)
 			return (NULL);
 		pthread_mutex_lock(&phi->slk->lock);
 	}

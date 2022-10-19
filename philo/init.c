@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:57:37 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 17:22:42 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/19 17:53:13 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 t_philo	*init_each_philo(t_mainS *s)
 {
-	int j;
-	t_philo *phi;
-	
+	int		j;
+	t_philo	*phi;
+
 	phi = malloc(sizeof(t_philo) * s->nbr_phi);
 	if (phi == NULL)
 		s->error = 102;
@@ -28,23 +28,24 @@ t_philo	*init_each_philo(t_mainS *s)
 		phi[j].timer_eat = s->time_eat;
 		phi[j].timer_sleep = s->time_sleep;
 		phi[j].count_phi_eat = 0;
-		phi[j].startTime_mili = s->startTime_mili;
+		phi[j].start_time_mili = s->starttime_mili;
 		phi[j].error = 0;
 		phi[j].slk = s;
 		phi[j].nbr_phi = s->nbr_phi;
 		j++;
 	}
-	return(phi);
+	return (phi);
 }
 
 /*
 UNIX epoch, on midnight UTC on January 1, 1970, might be risky to
 set here.
 */
-void init_mutex(t_mainS *s)
+
+void	init_mutex(t_mainS *s)
 {
-	int i;
-	
+	int	i;
+
 	i = 0;
 	pthread_mutex_init(&s->lock, NULL);
 	while (i < s->nbr_phi)
@@ -54,10 +55,10 @@ void init_mutex(t_mainS *s)
 	}
 }
 
-int init_struct(t_mainS *s, char **argv)
+int	init_struct(t_mainS *s, char **argv)
 {
 	int	j;
-	
+
 	j = 1;
 	s->nbr_phi = ft_atoi(argv[j++], s);
 	if (s->nbr_phi == 0)
@@ -75,10 +76,9 @@ int init_struct(t_mainS *s, char **argv)
 	s->fork = malloc(sizeof(pthread_mutex_t) * s->nbr_fork);
 	if (s->fork == NULL)
 		s->error = 102;
-	s->startTime_mili = (s->time.tv_sec * 1000) + (s->time.tv_usec / 1000);
+	s->starttime_mili = (s->time.tv_sec * 1000) + (s->time.tv_usec / 1000);
 	s->phi = init_each_philo(s);
 	s->death = false;
 	init_mutex(s);
-	return(s->error);
+	return (s->error);
 }
-
