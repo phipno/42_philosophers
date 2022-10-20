@@ -1,4 +1,10 @@
 .vscode/
+.LazyPhilosophersTester/
+.philo/Simple-Ubuntu/
+.Philosphers-42Project-Tester/
+.Philosphers42/
+.philo2/
+.philo_tester_jaka/
 # Prerequisites
 *.d
 
