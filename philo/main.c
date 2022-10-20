@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:40:15 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/20 16:10:08 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/20 19:12:24 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int	start_simulation(t_mainS *s)
 void	freeee(t_mainS *s)
 {
 	int	i;
+
 	free(s->phi);
 	pthread_mutex_destroy(&s->lock);
 	i = 0;
