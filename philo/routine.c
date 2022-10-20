@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:33:07 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/20 16:47:50 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/20 19:02:47 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ static void	forks_and_food(t_philo *phi)
 	// phi->curr_run_mili = current_runtime(phi);
 	lock_them_mutexes(phi);
 	// phi->curr_run_mili = current_runtime(phi);
+	// pthread_mutex_lock(&phi->slk->fork[phi->id - 1]);
+	// print_manager('f', phi);
+	// if (phi->id == phi->nbr_phi && phi->nbr_phi % 2 != 0)
+	// 	pthread_mutex_lock(&phi->slk->fork[0]);
+	// else
+	// 	pthread_mutex_lock(&phi->slk->fork[phi->id]);
+	// print_manager('f', phi);
 	print_manager('e', phi);
 	if (phi->timer_eat > phi->timer_die)
 		my_sleep(phi->timer_die, phi);
@@ -49,6 +56,11 @@ static void	forks_and_food(t_philo *phi)
 		return ;
 	phi->count_phi_eat++;
 	unlock_them_mutexes(phi);
+	// pthread_mutex_unlock(&phi->slk->fork[phi->id - 1]);
+	// if (phi->id == phi->nbr_phi && phi->nbr_phi % 2 != 0)
+	// 	pthread_mutex_unlock(&phi->slk->fork[0]);
+	// else
+	// 	pthread_mutex_unlock(&phi->slk->fork[phi->id]);
 	sleepy_philo(phi);
 }
 
@@ -86,6 +98,8 @@ void	*routine(void *arg)
 		pthread_mutex_unlock(&phi->slk->lock);
 		forks_and_food(phi);
 		print_manager('t', phi);
+		if (phi->nbr_phi % 2 != 0)
+			my_sleep(phi->timer_eat, phi);
 		if (phi->slk->nbr_times_phi_eat != 0
 			&& phi->count_phi_eat == phi->slk->nbr_times_phi_eat)
 			return (NULL);
