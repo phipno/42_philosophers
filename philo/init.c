@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:57:37 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 17:53:13 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/20 16:06:24 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ void	init_mutex(t_mainS *s)
 {
 	int	i;
 
-	i = 0;
 	pthread_mutex_init(&s->lock, NULL);
-	while (i < s->nbr_phi)
+	i = 0;
+	while (i < s->nbr_fork)
 	{
 		pthread_mutex_init(&s->fork[i], NULL);
 		i++;

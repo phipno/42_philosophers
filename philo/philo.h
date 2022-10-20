@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:42:06 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 17:41:54 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/20 16:46:28 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,7 @@ void		print_manager(char action, t_philo *phi);
 bool		death_manager(int time_left, t_philo *phi);
 void		my_sleep(long long ms, t_philo *phi);
 long long	current_runtime(t_philo *phi);
+void		lock_them_mutexes(t_philo *phi);
+void		unlock_them_mutexes(t_philo *phi);
 
 #endif

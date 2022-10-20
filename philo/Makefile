@@ -1,7 +1,8 @@
 NAME = philo
 CC = cc
-CFLAGS = -Wall -Werror -Wextra
-SRC = main.c ft_atoi.c routine.c init.c utils.c
+CFLAGS = -g -Wall -Werror -Wextra
+TFLAG = -lpthread
+SRC = main.c ft_atoi.c routine.c init.c utils.c mutex.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)
@@ -10,7 +11,7 @@ all: $(NAME)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(OBJ)
-	$(CC) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME) $(TFLAG)
 
 clean:
 	rm -f $(wildcard *.o)

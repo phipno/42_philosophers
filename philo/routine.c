@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 14:33:07 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 17:52:47 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/20 16:47:50 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	sleepy_philo(t_philo *phi)
 {
-	phi->curr_run_mili = current_runtime(phi);
+	// phi->curr_run_mili = current_runtime(phi);
 	print_manager('s', phi);
 	if (phi->timer_eat + phi->timer_sleep >= phi->timer_die)
 	{
@@ -27,7 +27,7 @@ static void	sleepy_philo(t_philo *phi)
 		return ;
 	if (phi->timer_eat * 2 >= phi->timer_die)
 	{
-		phi->curr_run_mili = current_runtime(phi);
+		// phi->curr_run_mili = current_runtime(phi);
 		print_manager('t', phi);
 		my_sleep(phi->timer_die - phi->curr_run_mili, phi);
 		if (death_manager(phi->timer_die + 1, phi) == true)
@@ -37,25 +37,18 @@ static void	sleepy_philo(t_philo *phi)
 
 static void	forks_and_food(t_philo *phi)
 {
-	phi->curr_run_mili = current_runtime(phi);
-	pthread_mutex_lock(&phi->slk->fork[phi->id - 1]);
-	print_manager('f', phi);
-	if (phi->id == phi->slk->nbr_phi && phi->slk->nbr_fork % 2 != 0)
-		pthread_mutex_lock(&phi->slk->fork[0]);
-	else
-		pthread_mutex_lock(&phi->slk->fork[phi->id]);
-	print_manager('f', phi);
-	phi->curr_run_mili = current_runtime(phi);
+	// phi->curr_run_mili = current_runtime(phi);
+	lock_them_mutexes(phi);
+	// phi->curr_run_mili = current_runtime(phi);
 	print_manager('e', phi);
-	my_sleep(phi->timer_eat, phi);
+	if (phi->timer_eat > phi->timer_die)
+		my_sleep(phi->timer_die, phi);
+	else
+		my_sleep(phi->timer_eat, phi);
 	if (death_manager(phi->timer_eat, phi) == true)
 		return ;
 	phi->count_phi_eat++;
-	pthread_mutex_unlock(&phi->slk->fork[phi->id - 1]);
-	if (phi->id == phi->slk->nbr_phi && phi->slk->nbr_fork % 2 != 0)
-		pthread_mutex_unlock(&phi->slk->fork[0]);
-	else
-		pthread_mutex_unlock(&phi->slk->fork[phi->id]);
+	unlock_them_mutexes(phi);
 	sleepy_philo(phi);
 }
 
@@ -92,7 +85,6 @@ void	*routine(void *arg)
 	{
 		pthread_mutex_unlock(&phi->slk->lock);
 		forks_and_food(phi);
-		phi->curr_run_mili = current_runtime(phi);
 		print_manager('t', phi);
 		if (phi->slk->nbr_times_phi_eat != 0
 			&& phi->count_phi_eat == phi->slk->nbr_times_phi_eat)

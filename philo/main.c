@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 14:40:15 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 17:57:03 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/20 16:10:08 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ int	start_simulation(t_mainS *s)
 	int			i;
 	pthread_t	*tid;
 
-	i = 0;
 	tid = malloc(sizeof(pthread_t) * s->nbr_phi);
 	if (tid == NULL)
 		return (102);
+	i = 0;
 	while (i < s->nbr_phi)
 	{
 		if (pthread_create(&tid[i], NULL, &routine, &s->phi[i]) != 0)
@@ -71,6 +71,7 @@ void	freeee(t_mainS *s)
 		pthread_mutex_destroy(&s->fork[i]);
 		i++;
 	}
+	free(s->fork);
 }
 
 int	main(int argc, char **argv)

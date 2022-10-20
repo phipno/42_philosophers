@@ -6,7 +6,7 @@
 /*   By: pnolte <pnolte@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/18 15:56:58 by pnolte            #+#    #+#             */
-/*   Updated: 2022/10/19 17:55:53 by pnolte           ###   ########.fr       */
+/*   Updated: 2022/10/20 12:10:27 by pnolte           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	print_manager(char action, t_philo *phi)
 	pthread_mutex_lock(&phi->slk->lock);
 	if (phi->slk->death == false)
 	{
+		phi->curr_run_mili = current_runtime(phi);
 		if (action == 'e')
 			printf("%lld %d is eating\n", phi->curr_run_mili, phi->id);
 		else if (action == 'f')
